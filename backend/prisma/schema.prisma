@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(STAFF)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  locationAssignments LocationAssignment[]
+  movements           StockMovement[]
+  auditLogs           AuditLog[]
+  notes               ItemNote[]
+}
+
+enum Role {
+  MANAGER
+  STAFF
+}
+
+model Supplier {
+  id        String   @id @default(cuid())
+  name      String
+  contact   String?
+  email     String?
+  phone     String?
+  createdAt DateTime @default(now())
+  items     Item[]
+}
+
+model Category {
+  id    String @id @default(cuid())
+  name  String @unique
+  items Item[]
+}
+
+model Item {
+  id           String    @id @default(cuid())
+  sku          String    @unique
+  name         String
+  description  String?
+  unit         String
+  reorderLevel Int       @default(0)
+  categoryId   String
+  supplierId   String?
+  isArchived   Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  category   Category      @relation(fields: [categoryId], references: [id])
+  supplier   Supplier?     @relation(fields: [supplierId], references: [id])
+  movements  StockMovement[]
+  auditLogs  AuditLog[]
+  notes      ItemNote[]
+  alerts     LowStockAlert[]
+}
+
+model Location {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  assignments LocationAssignment[]
+  movements   StockMovement[]
+}
+
+model LocationAssignment {
+  id         String   @id @default(cuid())
+  userId     String
+  locationId String
+  assignedAt DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@unique([userId, locationId])
+}
+
+model StockMovement {
+  id                   String       @id @default(cuid())
+  itemId               String
+  kind                 MovementKind
+  quantity             Int
+  locationId           String
+  sourceLocationId     String?      // transfer only
+  destinationLocationId String?     // transfer only
+  reason               String?      // required for adjustments
+  recordedById         String
+  createdAt            DateTime     @default(now())
+
+  item       Item     @relation(fields: [itemId], references: [id])
+  location   Location @relation(fields: [locationId], references: [id])
+  recordedBy User     @relation(fields: [recordedById], references: [id])
+}
+
+enum MovementKind {
+  RECEIPT
+  ISSUE
+  TRANSFER
+  ADJUSTMENT
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  itemId    String
+  userId    String
+  field     String?  // null for "created" events
+  oldValue  String?
+  newValue  String?
+  createdAt DateTime @default(now())
+
+  item Item @relation(fields: [itemId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ItemNote {
+  id        String   @id @default(cuid())
+  itemId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+
+  item Item @relation(fields: [itemId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model LowStockAlert {
+  id                    String    @id @default(cuid())
+  itemId                String    @unique
+  dismissedAt           DateTime?
+  lastTriggeredQuantity Int
+
+  item Item @relation(fields: [itemId], references: [id])
+}

@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { UsersService } from './users.service';
 import { assignLocationSchema } from './users.schemas';
-import { AuthenticatedRequest } from '../../middleware/auth';
+import { AuthenticatedRequest } from '../../../middleware/auth';
 
 export class UsersController {
   static async listUsers(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {

@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { Role } from '@prisma/client';
-import { config } from '../config/env';
+import { prisma } from '../src/config/db';
+import { config } from '../src/config/env';
 
 export interface AuthUser {
   userId: string;
@@ -13,11 +14,11 @@ export interface AuthenticatedRequest extends Request {
   user?: AuthUser;
 }
 
-export const authenticate = (
+export const authenticate = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -29,10 +30,21 @@ export const authenticate = (
 
   try {
     const decoded = jwt.verify(token, config.jwtSecret) as AuthUser;
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { id: true, email: true, role: true },
+    });
+
+    if (!user) {
+      res.status(401).json({ message: 'Invalid session or user account not found. Please log in again.' });
+      return;
+    }
+
     req.user = {
-      userId: decoded.userId,
-      email: decoded.email,
-      role: decoded.role,
+      userId: user.id,
+      email: user.email,
+      role: user.role,
     };
     next();
   } catch (error) {

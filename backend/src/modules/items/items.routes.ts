@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ItemsController } from './items.controller';
 import { MovementsController } from '../movements/movements.controller';
-import { authenticate, requireRole } from '../../middleware/auth';
+import { authenticate, requireRole } from '../../../middleware/auth';
 import { Role } from '@prisma/client';
 
 const itemsRouter = Router();

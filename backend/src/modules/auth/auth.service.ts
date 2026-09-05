@@ -4,7 +4,7 @@ import { Role } from '@prisma/client';
 import { prisma } from '../../config/db';
 import { config } from '../../config/env';
 import { RegisterInput, LoginInput } from './auth.schemas';
-import { AuthUser } from '../../middleware/auth';
+import { AuthUser } from '../../../middleware/auth';
 
 export class AuthService {
   static async register(input: RegisterInput, currentUser?: AuthUser) {

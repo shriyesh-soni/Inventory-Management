@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { ItemsService, ListItemsQuery } from './items.service';
-import { AuthenticatedRequest } from '../../middleware/auth';
+import { AuthenticatedRequest } from '../../../middleware/auth';
 
 const createItemSchema = z.object({
   sku: z.string().min(1, 'SKU is required').trim(),

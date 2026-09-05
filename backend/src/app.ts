@@ -12,8 +12,7 @@ import movementsRouter from './modules/movements/movements.routes';
 import alertsRouter from './modules/alerts/alerts.routes';
 import dashboardRouter from './modules/dashboard/dashboard.routes';
 import importExportRouter from './modules/import-export/import-export.routes';
-import suppliersRouter from './modules/suppliers/suppliers.routes';
-import { errorHandler } from './middleware/errorHandler';
+import { errorHandler } from '../middleware/errorHandler';
 
 const app: Application = express();
 
@@ -52,7 +51,6 @@ app.use('/items', itemsRouter);
 app.use('/movements', movementsRouter);
 app.use('/alerts', alertsRouter);
 app.use('/dashboard', dashboardRouter);
-app.use('/suppliers', suppliersRouter);
 app.use('/', importExportRouter);
 
 // Global Error Handler

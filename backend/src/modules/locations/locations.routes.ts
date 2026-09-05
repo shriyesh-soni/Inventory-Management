@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { LocationsController } from './locations.controller';
-import { authenticate, requireRole } from '../../middleware/auth';
+import { authenticate, requireRole } from '../../../middleware/auth';
 import { Role } from '@prisma/client';
 
 const locationsRouter = Router();

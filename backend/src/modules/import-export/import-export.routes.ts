@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { ImportExportController } from './import-export.controller';
-import { authenticate, requireRole } from '../../middleware/auth';
+import { authenticate, requireRole } from '../../../middleware/auth';
 import { Role } from '@prisma/client';
 
 const upload = multer({ storage: multer.memoryStorage() });

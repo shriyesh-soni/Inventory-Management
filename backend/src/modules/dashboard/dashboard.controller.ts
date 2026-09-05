@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { DashboardService } from './dashboard.service';
-import { AuthenticatedRequest } from '../../middleware/auth';
+import { AuthenticatedRequest } from '../../../middleware/auth';
 
 export class DashboardController {
   static async getSummaryStats(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {

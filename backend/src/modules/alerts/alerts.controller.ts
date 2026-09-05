@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { AlertsService } from './alerts.service';
-import { AuthenticatedRequest } from '../../middleware/auth';
+import { AuthenticatedRequest } from '../../../middleware/auth';
 
 export class AlertsController {
   static async listActiveAlerts(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {

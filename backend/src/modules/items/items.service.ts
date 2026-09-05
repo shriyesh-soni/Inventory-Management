@@ -1,6 +1,7 @@
 import { prisma } from '../../config/db';
 import { calculateOnHandForItems, ItemStockSummary } from './items.utils';
 import { Prisma } from '@prisma/client';
+import { AlertsService } from '../alerts/alerts.service';
 
 export interface ListItemsQuery {
   search?: string;
@@ -217,6 +218,8 @@ export class ItemsService {
       },
     });
 
+    await AlertsService.reevaluateAlert(item.id);
+
     return {
       ...item,
       totalOnHand: 0,
@@ -301,6 +304,9 @@ export class ItemsService {
       });
     }
 
+    // Re-evaluate low stock alert state on item update (e.g. changed reorder level)
+    await AlertsService.reevaluateAlert(id);
+
     const stockMap = await calculateOnHandForItems([id]);
     const stock = stockMap.get(id) || { totalOnHand: 0, locations: [] };
 
@@ -344,6 +350,9 @@ export class ItemsService {
         newValue: String(isArchived),
       },
     });
+
+    // Re-evaluate alert (archives remove alert, restoring may re-trigger alert)
+    await AlertsService.reevaluateAlert(id);
 
     const stockMap = await calculateOnHandForItems([id]);
     const stock = stockMap.get(id) || { totalOnHand: 0, locations: [] };

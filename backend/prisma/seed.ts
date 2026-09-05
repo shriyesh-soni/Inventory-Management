@@ -79,45 +79,117 @@ async function main() {
 
   console.log('✓ 4 Categories created');
 
-  // 5. Create Suppliers
-  const suppTech = await prisma.supplier.create({
+  // 5. Create Suppliers (Office Characters)
+  const suppMichael = await prisma.supplier.create({
     data: {
-      name: 'TechSupply Global Co.',
+      name: 'Dunder Mifflin Paper Co.',
       contact: 'Michael Scott',
-      email: 'sales@techsupply.com',
-      phone: '+1-800-555-0199',
+      email: 'michael.scott@dundermifflin.com',
+      phone: '+1-570-555-0100',
     },
   });
 
-  const suppPaper = await prisma.supplier.create({
+  const suppDwight = await prisma.supplier.create({
     data: {
-      name: 'Apex Paper & Packaging',
+      name: 'Schrute Farms & Logistics',
       contact: 'Dwight Schrute',
-      email: 'dwight@apexpaper.com',
-      phone: '+1-800-555-0288',
+      email: 'dwight.schrute@schrutefarms.com',
+      phone: '+1-570-555-0102',
     },
   });
 
-  console.log('✓ 2 Suppliers created');
+  const suppJim = await prisma.supplier.create({
+    data: {
+      name: 'Athlead Sports Equipment',
+      contact: 'Jim Halpert',
+      email: 'jim.halpert@athlead.com',
+      phone: '+1-215-555-0104',
+    },
+  });
+
+  const suppPam = await prisma.supplier.create({
+    data: {
+      name: 'Beesly Art & Design Studio',
+      contact: 'Pam Beesly',
+      email: 'pam.beesly@dundermifflin.com',
+      phone: '+1-570-555-0109',
+    },
+  });
+
+  const suppBob = await prisma.supplier.create({
+    data: {
+      name: 'Vance Refrigeration Solutions',
+      contact: 'Bob Vance',
+      email: 'bob.vance@vancerefrigeration.com',
+      phone: '+1-570-555-0103',
+    },
+  });
+
+  const suppRyan = await prisma.supplier.create({
+    data: {
+      name: 'WUPFH Digital Solutions',
+      contact: 'Ryan Howard',
+      email: 'ryan.howard@wupfh.com',
+      phone: '+1-570-555-0106',
+    },
+  });
+
+  const suppAndy = await prisma.supplier.create({
+    data: {
+      name: 'Bernard Cornell Merchandise',
+      contact: 'Andy Bernard',
+      email: 'narddog@cornell.edu',
+      phone: '+1-570-555-0105',
+    },
+  });
+
+  const suppStanley = await prisma.supplier.create({
+    data: {
+      name: 'Pretzel Day Wholesale',
+      contact: 'Stanley Hudson',
+      email: 'stanley.hudson@dundermifflin.com',
+      phone: '+1-570-555-0110',
+    },
+  });
+
+  const suppAngela = await prisma.supplier.create({
+    data: {
+      name: 'Pronto Accounting & Tax',
+      contact: 'Angela Martin',
+      email: 'angela.martin@dundermifflin.com',
+      phone: '+1-570-555-0111',
+    },
+  });
+
+  const suppCreed = await prisma.supplier.create({
+    data: {
+      name: 'Quabity Assuance Corp',
+      contact: 'Creed Bratton',
+      email: 'creed.bratton@dundermifflin.com',
+      phone: '+1-570-555-0107',
+    },
+  });
+
+  console.log('✓ 10 Office Suppliers created');
 
   // 6. Create 16 Items
   const itemsData = [
-    { sku: 'ELEC-LAP-101', name: 'Workstation Laptop 15"', unit: 'pcs', reorderLevel: 10, categoryId: catElectronics.id, supplierId: suppTech.id },
-    { sku: 'ELEC-MON-102', name: '4K IPS Monitor 27"', unit: 'pcs', reorderLevel: 8, categoryId: catElectronics.id, supplierId: suppTech.id },
-    { sku: 'ELEC-KBD-103', name: 'Mechanical Keyboard RGB', unit: 'pcs', reorderLevel: 15, categoryId: catElectronics.id, supplierId: suppTech.id },
-    { sku: 'ELEC-MSE-104', name: 'Ergonomic Wireless Mouse', unit: 'pcs', reorderLevel: 20, categoryId: catElectronics.id, supplierId: suppTech.id },
-    { sku: 'NET-RTR-201', name: 'Enterprise Gigabit Router', unit: 'pcs', reorderLevel: 5, categoryId: catNetworking.id, supplierId: suppTech.id },
-    { sku: 'NET-SWT-202', name: '24-Port Managed Switch', unit: 'pcs', reorderLevel: 6, categoryId: catNetworking.id, supplierId: suppTech.id },
-    { sku: 'NET-CBL-203', name: 'Cat6 Patch Cable 10ft', unit: 'packs', reorderLevel: 30, categoryId: catNetworking.id, supplierId: suppTech.id },
-    { sku: 'NET-AP-204', name: 'Wi-Fi 6 Access Point', unit: 'pcs', reorderLevel: 10, categoryId: catNetworking.id, supplierId: suppTech.id },
-    { sku: 'OFF-PPR-301', name: 'A4 Printing Paper (Box of 5)', unit: 'boxes', reorderLevel: 25, categoryId: catOffice.id, supplierId: suppPaper.id },
-    { sku: 'OFF-TNR-302', name: 'LaserJet Toner Black', unit: 'pcs', reorderLevel: 12, categoryId: catOffice.id, supplierId: suppPaper.id },
-    { sku: 'OFF-PEN-303', name: 'Gel Ink Pens (Pack of 12)', unit: 'packs', reorderLevel: 40, categoryId: catOffice.id, supplierId: suppPaper.id },
-    { sku: 'OFF-DSK-304', name: 'Adjustable Standing Desk', unit: 'pcs', reorderLevel: 4, categoryId: catOffice.id, supplierId: suppPaper.id },
-    { sku: 'PKG-BOX-401', name: 'Cardboard Shipping Box (Medium)', unit: 'pcs', reorderLevel: 50, categoryId: catPackaging.id, supplierId: suppPaper.id },
-    { sku: 'PKG-TAP-402', name: 'Heavy Duty Packing Tape', unit: 'rolls', reorderLevel: 35, categoryId: catPackaging.id, supplierId: suppPaper.id },
-    { sku: 'PKG-BUB-403', name: 'Bubble Wrap Roll 100ft', unit: 'rolls', reorderLevel: 15, categoryId: catPackaging.id, supplierId: suppPaper.id },
-    { sku: 'PKG-LBL-404', name: 'Thermal Shipping Labels', unit: 'rolls', reorderLevel: 20, categoryId: catPackaging.id, supplierId: suppPaper.id },
+    { sku: 'ELEC-LAP-101', name: 'Workstation Laptop 15"', unit: 'pcs', reorderLevel: 10, categoryId: catElectronics.id, supplierId: suppRyan.id },
+    { sku: 'ELEC-MON-102', name: '4K IPS Monitor 27"', unit: 'pcs', reorderLevel: 8, categoryId: catElectronics.id, supplierId: suppBob.id },
+    { sku: 'ELEC-KBD-103', name: 'Mechanical Keyboard RGB', unit: 'pcs', reorderLevel: 15, categoryId: catElectronics.id, supplierId: suppJim.id },
+    { sku: 'ELEC-MSE-104', name: 'Ergonomic Wireless Mouse', unit: 'pcs', reorderLevel: 20, categoryId: catElectronics.id, supplierId: suppJim.id },
+    { sku: 'NET-RTR-201', name: 'Enterprise Gigabit Router', unit: 'pcs', reorderLevel: 5, categoryId: catNetworking.id, supplierId: suppCreed.id },
+    { sku: 'NET-SWT-202', name: '24-Port Managed Switch', unit: 'pcs', reorderLevel: 6, categoryId: catNetworking.id, supplierId: suppCreed.id },
+    { sku: 'NET-CBL-203', name: 'Cat6 Patch Cable 10ft', unit: 'packs', reorderLevel: 30, categoryId: catNetworking.id, supplierId: suppRyan.id },
+    { sku: 'NET-AP-204', name: 'Wi-Fi 6 Access Point', unit: 'pcs', reorderLevel: 10, categoryId: catNetworking.id, supplierId: suppBob.id },
+    { sku: 'OFF-PPR-301', name: 'A4 Printing Paper (Box of 5)', unit: 'boxes', reorderLevel: 25, categoryId: catOffice.id, supplierId: suppMichael.id },
+    { sku: 'OFF-TNR-302', name: 'LaserJet Toner Black', unit: 'pcs', reorderLevel: 12, categoryId: catOffice.id, supplierId: suppMichael.id },
+    { sku: 'OFF-PEN-303', name: 'Gel Ink Pens (Pack of 12)', unit: 'packs', reorderLevel: 40, categoryId: catOffice.id, supplierId: suppPam.id },
+    { sku: 'OFF-DSK-304', name: 'Adjustable Standing Desk', unit: 'pcs', reorderLevel: 4, categoryId: catOffice.id, supplierId: suppAndy.id },
+    { sku: 'PKG-BOX-401', name: 'Cardboard Shipping Box (Medium)', unit: 'pcs', reorderLevel: 50, categoryId: catPackaging.id, supplierId: suppDwight.id },
+    { sku: 'PKG-TAP-402', name: 'Heavy Duty Packing Tape', unit: 'rolls', reorderLevel: 35, categoryId: catPackaging.id, supplierId: suppDwight.id },
+    { sku: 'PKG-BUB-403', name: 'Bubble Wrap Roll 100ft', unit: 'rolls', reorderLevel: 15, categoryId: catPackaging.id, supplierId: suppStanley.id },
+    { sku: 'PKG-LBL-404', name: 'Thermal Shipping Labels', unit: 'rolls', reorderLevel: 20, categoryId: catPackaging.id, supplierId: suppAngela.id },
   ];
 
   const createdItems = [];

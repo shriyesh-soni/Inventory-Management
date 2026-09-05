@@ -1,47 +1,38 @@
-'use client'
-
-import React from 'react'
 import Link from 'next/link'
+import { LogoMark } from '@/components/shared/Logo'
 import { RegisterForm } from '@/components/auth/RegisterForm'
-import { Box } from 'lucide-react'
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-      <div className="w-full max-w-md">
-        {/* Brand Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-500/30 mb-3">
-            <Box className="w-7 h-7" />
-          </div>
-          <h1 className="text-2xl font-black tracking-tight text-white">StockControl</h1>
-          <p className="text-xs text-blue-200/70 mt-1">
-            Enterprise Inventory & Warehouse Stock Control System
-          </p>
-        </div>
-
-        {/* Card */}
-        <div className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100">
-          <div className="mb-6">
-            <h2 className="text-lg font-bold text-gray-900">Create Staff Account</h2>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Register new operator credentials for inventory operations
-            </p>
-          </div>
-
-          <RegisterForm />
-
-          <div className="mt-6 pt-5 border-t border-gray-100 text-center text-xs text-gray-500">
-            Already have an account?{' '}
-            <Link
-              href="/login"
-              className="font-bold text-blue-600 hover:text-blue-700 hover:underline"
-            >
-              Sign In
-            </Link>
-          </div>
-        </div>
+    <div className="w-full max-w-md space-y-6 p-4">
+      <div className="flex flex-col items-center text-center space-y-2">
+        <Link href="/" className="inline-flex items-center gap-2 mb-2">
+          <LogoMark size={40} />
+          <span className="text-2xl font-bold text-gray-900 tracking-tight">
+            StockControl
+          </span>
+        </Link>
+        <h1 className="text-xl font-semibold text-gray-800">
+          Create an account
+        </h1>
+        <p className="text-sm text-gray-500">
+          Get started with modern inventory & stock management
+        </p>
       </div>
+
+      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <RegisterForm />
+      </div>
+
+      <p className="text-center text-sm text-gray-500">
+        Already have an account?{' '}
+        <Link
+          href="/login"
+          className="font-medium text-blue-600 hover:text-blue-700 underline underline-offset-4"
+        >
+          Sign in
+        </Link>
+      </p>
     </div>
   )
 }

@@ -3,24 +3,29 @@ import { calculateOnHandForItems } from '../items/items.utils';
 
 export class AlertsService {
   /**
-   * Re-evaluates low stock alert status for a given item after any movement.
+   * Re-evaluates low stock alert status for a given item after any movement or item update.
    */
   static async reevaluateAlert(itemId: string): Promise<void> {
     const item = await prisma.item.findUnique({
       where: { id: itemId },
     });
 
+    const existingAlert = await prisma.lowStockAlert.findUnique({
+      where: { itemId },
+    });
+
     if (!item || item.isArchived) {
+      if (existingAlert) {
+        await prisma.lowStockAlert.delete({
+          where: { itemId },
+        });
+      }
       return;
     }
 
     const stockMap = await calculateOnHandForItems([itemId]);
     const stock = stockMap.get(itemId);
     const totalOnHand = stock ? stock.totalOnHand : 0;
-
-    const existingAlert = await prisma.lowStockAlert.findUnique({
-      where: { itemId },
-    });
 
     if (totalOnHand <= item.reorderLevel) {
       if (!existingAlert) {
@@ -32,11 +37,10 @@ export class AlertsService {
           },
         });
       } else {
-        // If alert was dismissed, re-trigger it by setting dismissedAt to null
+        // If reorder level was increased above on-hand, or stock dropped further, re-activate
         await prisma.lowStockAlert.update({
           where: { itemId },
           data: {
-            dismissedAt: null,
             lastTriggeredQuantity: totalOnHand,
           },
         });
@@ -52,12 +56,53 @@ export class AlertsService {
   }
 
   /**
+   * Synchronizes all active items with the alerts table.
+   */
+  static async syncAllAlerts(): Promise<void> {
+    const items = await prisma.item.findMany({
+      where: { isArchived: false },
+    });
+    if (items.length === 0) return;
+
+    const itemIds = items.map((i) => i.id);
+    const stockMap = await calculateOnHandForItems(itemIds);
+    const existingAlerts = await prisma.lowStockAlert.findMany();
+    const alertsMap = new Map(existingAlerts.map((a) => [a.itemId, a]));
+
+    for (const item of items) {
+      const stock = stockMap.get(item.id)?.totalOnHand ?? 0;
+      const alert = alertsMap.get(item.id);
+
+      if (stock <= item.reorderLevel) {
+        if (!alert) {
+          await prisma.lowStockAlert.create({
+            data: {
+              itemId: item.id,
+              lastTriggeredQuantity: stock,
+              dismissedAt: null,
+            },
+          });
+        }
+      } else if (alert) {
+        await prisma.lowStockAlert.delete({
+          where: { itemId: item.id },
+        });
+      }
+    }
+  }
+
+  /**
    * List all active alerts (where dismissedAt is null)
    */
   static async listActiveAlerts() {
+    await this.syncAllAlerts();
+
     const alerts = await prisma.lowStockAlert.findMany({
       where: {
         dismissedAt: null,
+        item: {
+          isArchived: false,
+        },
       },
       include: {
         item: {

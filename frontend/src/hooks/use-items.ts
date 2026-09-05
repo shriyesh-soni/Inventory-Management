@@ -102,6 +102,8 @@ export function useCreateItem() {
     mutationFn: (data: ItemForm) => apiPost<Item>('/items', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.all })
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }
@@ -116,6 +118,8 @@ export function useUpdateItem() {
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.all })
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.detail(updatedItem.id) })
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.timeline(updatedItem.id) })
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }
@@ -129,6 +133,8 @@ export function useArchiveItem() {
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.all })
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.detail(item.id) })
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.timeline(item.id) })
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }
@@ -142,6 +148,8 @@ export function useRestoreItem() {
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.all })
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.detail(item.id) })
       queryClient.invalidateQueries({ queryKey: ITEM_QUERY_KEYS.timeline(item.id) })
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }

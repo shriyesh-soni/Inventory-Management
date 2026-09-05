@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
+import { Prisma } from '@prisma/client';
 
 export interface AppError extends Error {
   statusCode?: number;
@@ -13,6 +14,7 @@ export const errorHandler = (
 ): void => {
   if (err instanceof ZodError) {
     res.status(400).json({
+      message: 'Validation Error',
       error: {
         message: 'Validation Error',
         statusCode: 400,
@@ -23,6 +25,42 @@ export const errorHandler = (
       },
     });
     return;
+  }
+
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === 'P2002') {
+      const target = Array.isArray(err.meta?.target) ? err.meta.target.join(', ') : 'field';
+      res.status(409).json({
+        message: `A record with this ${target} already exists.`,
+        error: {
+          message: `A record with this ${target} already exists.`,
+          statusCode: 409,
+        },
+      });
+      return;
+    }
+
+    if (err.code === 'P2003') {
+      res.status(400).json({
+        message: 'Referenced entity does not exist or has been modified. Please refresh and try again.',
+        error: {
+          message: 'Referenced entity does not exist or has been modified. Please refresh and try again.',
+          statusCode: 400,
+        },
+      });
+      return;
+    }
+
+    if (err.code === 'P2025') {
+      res.status(404).json({
+        message: 'Requested record was not found.',
+        error: {
+          message: 'Requested record was not found.',
+          statusCode: 404,
+        },
+      });
+      return;
+    }
   }
 
   const statusCode = err.statusCode || 500;
@@ -36,6 +74,7 @@ export const errorHandler = (
   }
 
   res.status(statusCode).json({
+    message,
     error: {
       message,
       statusCode,

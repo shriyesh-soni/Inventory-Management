@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { ImportExportService } from './import-export.service';
-import { AuthenticatedRequest } from '../../middleware/auth';
+import { AuthenticatedRequest } from '../../../middleware/auth';
 
 export class ImportExportController {
   static async importItems(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {

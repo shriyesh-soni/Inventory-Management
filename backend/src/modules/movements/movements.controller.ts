@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { MovementsService } from './movements.service';
-import { AuthenticatedRequest } from '../../middleware/auth';
+import { AuthenticatedRequest } from '../../../middleware/auth';
 
 const receiptSchema = z.object({
   itemId: z.string().min(1, 'Item ID is required'),
